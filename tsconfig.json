@@ -1,0 +1,41 @@
+{
+    "include": [
+        ".react-router/types/**/*",
+        "app/**/*",
+    ],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "ES2022",
+        "module": "ES2022",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2022"
+        ],
+        "moduleResolution": "bundler",
+        "rootDirs": [
+            ".",
+            "./.react-router/types"
+        ],
+        "types": [
+            "node",
+            "vite/client"
+        ],
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "jsx": "react-jsx",
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "esModuleInterop": true,
+        "noErrorTruncation": true,
+        "resolveJsonModule": true,
+        "noImplicitReturns": true,
+        "noUnusedParameters": true,
+        "paths": {
+            "~/*": [
+                "./app/*",
+            ]
+        }
+    }
+}
