@@ -59,8 +59,8 @@ export default function Login({ actionData }: Route.ComponentProps) {
 								</svg>
 							</div>
 							<p className='text-red-100 text-sm font-medium'>
-								{actionData.message ??
-									'Sorry for that, try again in few minutes, please.'}
+								{/* {actionData.message ?? */}
+									Sorry for that, try again in few minutes, please.
 							</p>
 						</div>
 					</div>

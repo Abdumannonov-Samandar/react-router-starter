@@ -1,6 +1,6 @@
 import { createCookie } from "react-router";
 
-export const userCookie = createCookie("user", { httpOnly: true, path: "/", maxAge: 300 });
+export const userCookie = createCookie("user", { httpOnly: true, path: "/", maxAge: 200 });
 
 export const isAuthenticated = async (request: Request): Promise<boolean> => {
     const cookieHeader = request.headers.get("Cookie");

@@ -1,22 +1,35 @@
+
+
+
 import { Suspense } from 'react'
 import type { Route } from './+types/home'
 import { Welcome } from '~/welcome/welcome'
-import { Await, redirect } from 'react-router'
-import { isAuthenticated } from '~/lib/cookies.server'
+import { redirect } from 'react-router'
 
+// Server-only code in loader
 export async function loader({
 	request,
 }: Route.LoaderArgs): Promise<{ time: unknown } | Response> {
-	return isAuthenticated(request).then(flag => {
-		if (!flag) return redirect('/login', { status: 302 })
-		const timePromise = new Promise(resolve =>
-			setTimeout(() => resolve(new Date().toISOString()), 1000)
-		)
-		return { time: timePromise }
-	})
+	const { isAuthenticated } = await import('~/lib/cookies.server')
+	const flag = await isAuthenticated(request)
+
+	if (!flag) return redirect('/login', { status: 302 })
+
+	const timePromise = new Promise(resolve =>
+		setTimeout(() => resolve(new Date().toISOString()), 1000)
+	)
+	return { time: timePromise }
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+// Client-only component
+export default function Home() {
+
+	const handleLogout = async () => {
+		// Client-side logout logic
+		await fetch('/logout', { method: 'POST' })
+		window.location.href = '/login'
+	}
+
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden'>
 			{/* Background decorations */}
@@ -35,7 +48,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 					</div>
 					<div className='flex items-center space-x-4'>
 						<div className='w-8 h-8 bg-white/10 rounded-full backdrop-blur-sm border border-white/20'></div>
-						<button onClick={() => isAuthenticated} className='px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl text-white transition-all duration-200'>
+						<button
+							onClick={handleLogout}
+							className='px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl text-white transition-all duration-200'
+						>
 							Logout
 						</button>
 					</div>
@@ -142,7 +158,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 								</div>
 							}
 						>
-							<Await resolve={!(loaderData instanceof Response) ? loaderData?.time : undefined}>
+							{/* <Await
+								resolve={loaderData.time}
+							>
 								{time => (
 									<div className='text-center'>
 										<p className='text-2xl font-mono text-white bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'>
@@ -153,7 +171,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 										</p>
 									</div>
 								)}
-							</Await>
+							</Await> */}
 						</Suspense>
 					</div>
 				</div>
